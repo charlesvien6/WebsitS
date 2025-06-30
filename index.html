@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CSC Combined Quiz – Clerical & Grammar</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+    }
+    .topbar {
+      height: 60px;
+      background-color: #004d40;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+    .menu-toggle {
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      margin-right: 20px;
+    }
+    .topbar h1 {
+      font-size: 20px;
+      flex-grow: 1;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #004d40;
+      color: white;
+      height: 100vh;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      padding: 20px;
+      overflow-y: auto;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+    .sidebar.show {
+      transform: translateX(0);
+    }
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .menu-btn {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background-color: #00796b;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .menu-btn:hover {
+      background-color: #009688;
+    }
+    .record-box {
+      margin-top: 30px;
+      font-size: 15px;
+      color: #e0f2f1;
+      background: #004d40;
+      border-top: 1px solid #80cbc4;
+      padding-top: 15px;
+    }
+    .content {
+      margin-top: 70px;
+      padding: 20px 30px;
+      margin-left: 0;
+      transition: margin-left 0.3s ease;
+    }
+  #quizTitle {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #004d40;
+   text-align: center;
+}
+    .content.shifted {
+      margin-left: 250px;
+    }
+    .question-block {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .question-block p {
+      font-weight: bold;
+    }
+    .choice {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      background-color: #e0f2f1;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .choice:hover:not(:disabled) {
+      background-color: #b2dfdb;
+    }
+    .choice:disabled {
+      background-color: #eeeeee;
+      cursor: not-allowed;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .explanation {
+      margin-top: 6px;
+      padding-left: 10px;
+      border-left: 4px solid #26a69a;
+      color: #33691e;
+      font-size: 14px;
+    }
+    .next-btn {
+      background-color: #00796b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    #score {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #004d40;
+    }
+  </style>
+</head>
+<body>
+<div id="landingPage" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(to right, #004d40, #00695c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: 'Segoe UI', sans-serif;
+  animation: fadeIn 1.2s ease;
+">
+  <div style="
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    text-align: center;
+    color: #ffffff;
+    max-width: 90%;
+    width: 400px;
+  ">
+    <h1 style="font-size: 34px; margin-bottom: 15px;">🙏PAPASA TAYO</h1>
+    <p style="font-size: 18px; margin-bottom: 30px; line-height: 1.5;">
+      “Before you begin your journey to success, take a moment to pause, reflect, and pray.      Stay calm, focused, and give your best. Your preparation and faith will guide you through.”
+    </p>
+    <button onclick="hideLanding()" style="
+      padding: 12px 28px;
+      font-size: 16px;
+      background-color: #00bfa5;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    "
+    onmouseover="this.style.backgroundColor='#1de9b6'; this.style.transform='scale(1.05)'"
+    onmouseout="this.style.backgroundColor='#00bfa5'; this.style.transform='scale(1)'"
+    >Start Test</button>
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+</style>
+  <div class="topbar">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <h1>CSC Practice Quiz – Clerical & Grammar</h1>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <h2>Sections</h2>
+     <button class="menu-btn" onclick="startQuiz('geninfo')">General Information</button>
+    <button class="menu-btn" onclick="startQuiz('clerical')">Clerical Operation</button>
+    <button class="menu-btn" onclick="startQuiz('grammar')">Identifying Errors</button>
+    <div class="record-box" id="scoreRecord">Total Score: 0 / 0</div>
+  </div>
+
+  <div class="content" id="content">
+    <h2 id="quizTitle"></h2>
+    <div id="quizSection"></div>
+  </div>
+
+  <script>
+  
+    let allScore = 0;
+    let allTotal = 0;
+
+    const quizzes = {
+      geninfo: [
+   
+  // 1–10: Philippine Constitution
+  {
+    question: "What is the primary purpose of the Philippine Constitution?",
+    choices: [
+      "To define government budget",
+      "To establish diplomatic policies",
+      "To lay the foundation of the state and protect citizens' rights",
+      "To manage local government units"
+    ],
+    answer: "To lay the foundation of the state and protect citizens' rights",
+    explanation: "The Constitution outlines government structure and safeguards civil liberties."
+  },
+  {
+    question: "Which branch of government interprets the laws of the Philippines?",
+    choices: [
+      "Legislative",
+      "Executive",
+      "Judicial",
+      "Commission on Audit"
+    ],
+    answer: "Judicial",
+    explanation: "The Judicial branch interprets laws and settles legal controversies."
+  },
+  {
+    question: "Under the 1987 Constitution, what is the term length of Senators?",
+    choices: [
+      "4 years",
+      "6 years",
+      "3 years",
+      "5 years"
+    ],
+    answer: "6 years",
+    explanation: "Senators are elected to a 6-year term, renewable once consecutively."
+  },
+  {
+    question: "Which article of the Constitution guarantees the Bill of Rights?",
+    choices: [
+      "Article II",
+      "Article III",
+      "Article IV",
+      "Article I"
+    ],
+    answer: "Article III",
+    explanation: "Article III lists the civil and political rights of citizens."
+  },
+  {
+    question: "Who has the power to declare martial law?",
+    choices: [
+      "Senate",
+      "President",
+      "Chief Justice",
+      "Speaker of the House"
+    ],
+    answer: "President",
+    explanation: "Martial law can be declared by the President under specific circumstances."
+  },
+  {
+    question: "What is the composition of the Supreme Court?",
+    choices: [
+      "One Chief Justice and 14 Associate Justices",
+      "One Chief Justice and 9 Associate Justices",
+      "15 Senators and 1 President",
+      "13 Cabinet members"
+    ],
+    answer: "One Chief Justice and 14 Associate Justices",
+    explanation: "The Supreme Court is the highest court with 15 justices."
+  },
+  {
+    question: "Which body approves treaties and international agreements?",
+    choices: [
+      "Congress",
+      "Senate",
+      "House of Representatives",
+      "Supreme Court"
+    ],
+    answer: "Senate",
+    explanation: "The Senate approves treaties by a two-thirds vote."
+  },
+  {
+    question: "What is the highest law of the land?",
+    choices: [
+      "Supreme Court rulings",
+      "Presidential Decrees",
+      "The Philippine Constitution",
+      "Republic Acts"
+    ],
+    answer: "The Philippine Constitution",
+    explanation: "The Constitution is the supreme law governing all others."
+  },
+  {
+    question: "Who elects the President of the Philippines?",
+    choices: [
+      "Congress",
+      "Senate",
+      "People through direct vote",
+      "Judicial and Bar Council"
+    ],
+    answer: "People through direct vote",
+    explanation: "The President is elected by the people via direct popular vote."
+  },
+  {
+    question: "How many years must a Senator be a Philippine resident before election?",
+    choices: [
+      "3 years",
+      "2 years",
+      "10 years",
+      "5 years"
+    ],
+    answer: "2 years",
+    explanation: "Senators must be Philippine residents for at least 2 years before election."
+  },
+
+  // 11–20: Code of Conduct and Ethical Standards for Public Officials (R.A. 6713)
+  {
+    question: "What is the main goal of R.A. 6713?",
+    choices: [
+      "To regulate salaries of public servants",
+      "To provide retirement benefits",
+      "To promote ethical standards and accountability",
+      "To enhance procurement systems"
+    ],
+    answer: "To promote ethical standards and accountability",
+    explanation: "R.A. 6713 fosters honesty, transparency, and integrity in public service."
+  },
+  {
+    question: "Under R.A. 6713, public officials must file a SALN. What does SALN stand for?",
+    choices: [
+      "Statement of Annual Local Nominees",
+      "Systematic Asset and Liability Notation",
+      "Statement of Assets, Liabilities and Net Worth",
+      "Standard Act for Legal Net-worth"
+    ],
+    answer: "Statement of Assets, Liabilities and Net Worth",
+    explanation: "SALN ensures transparency in officials’ financial status."
+  },
+  {
+    question: "What value is promoted by being punctual and efficient in service?",
+    choices: [
+      "Responsibility",
+      "Commitment to Public Interest",
+      "Nationalism",
+      "Political Neutrality"
+    ],
+    answer: "Commitment to Public Interest",
+    explanation: "Efficiency and punctuality reflect dedication to public interest."
+  },
+  {
+    question: "Public officials are prohibited from accepting gifts if they could influence decisions. This refers to what value?",
+    choices: [
+      "Justice",
+      "Responsiveness",
+      "Professionalism",
+      "Integrity"
+    ],
+    answer: "Integrity",
+    explanation: "Integrity means avoiding conflicts of interest and undue influence."
+  },
+  {
+    question: "What principle prohibits public officials from using their position for private gain?",
+    choices: [
+      "Nationalism",
+      "Political Neutrality",
+      "Integrity",
+      "Transparency"
+    ],
+    answer: "Integrity",
+    explanation: "Using one’s position for personal advantage violates ethical standards."
+  },
+  {
+    question: "Which agency enforces R.A. 6713?",
+    choices: [
+      "DILG",
+      "Civil Service Commission",
+      "Sandiganbayan",
+      "Office of the Ombudsman"
+    ],
+    answer: "Civil Service Commission",
+    explanation: "The CSC implements and monitors compliance with R.A. 6713."
+  },
+  {
+    question: "How often must a SALN be filed?",
+    choices: [
+      "Only once upon entry",
+      "Every year",
+      "Every three years",
+      "Every time assets change"
+    ],
+    answer: "Every year",
+    explanation: "SALNs must be filed yearly and upon entry or exit from public office."
+  },
+  {
+    question: "What is the maximum number of working days to submit a SALN after assumption of office?",
+    choices: [
+      "15 days",
+      "30 days",
+      "45 days",
+      "60 days"
+    ],
+    answer: "30 days",
+    explanation: "New officials must file their SALN within 30 days of assumption."
+  },
+  {
+    question: "Which of the following is considered prohibited conduct under R.A. 6713?",
+    choices: [
+      "Receiving awards",
+      "Joining civic organizations",
+      "Accepting bribes",
+      "Voting in elections"
+    ],
+    answer: "Accepting bribes",
+    explanation: "Bribery is a clear violation of ethical standards."
+  },
+  {
+    question: "Which principle ensures neutrality in political affairs of public servants?",
+    choices: [
+      "Political Neutrality",
+      "Justice",
+      "Transparency",
+      "Nationalism"
+    ],
+    answer: "Political Neutrality",
+    explanation: "Public servants must not use their position for political activities."
+  },
+
+  // 21–30: Peace and Human Rights Issues and Concepts
+  {
+    question: "Which document guarantees basic human rights globally?",
+    choices: [
+      "ASEAN Charter",
+      "Magna Carta of Women",
+      "Universal Declaration of Human Rights",
+      "1987 Philippine Constitution"
+    ],
+    answer: "Universal Declaration of Human Rights",
+    explanation: "The UDHR outlines universal human rights principles."
+  },
+  {
+    question: "Which agency in the Philippines protects human rights?",
+    choices: [
+      "Department of Justice",
+      "Sandiganbayan",
+      "Civil Service Commission",
+      "Commission on Human Rights"
+    ],
+    answer: "Commission on Human Rights",
+    explanation: "CHR ensures protection of civil and political rights."
+  },
+  {
+    question: "What is the goal of peace education?",
+    choices: [
+      "Promote war strategies",
+      "Encourage armed self-defense",
+      "Foster tolerance and conflict resolution",
+      "Teach economic development"
+    ],
+    answer: "Foster tolerance and conflict resolution",
+    explanation: "Peace education cultivates empathy, cooperation, and dialogue."
+  },
+  {
+    question: "Which law promotes rights of Indigenous Peoples in the Philippines?",
+    choices: [
+      "R.A. 6713",
+      "R.A. 8371",
+      "R.A. 9165",
+      "R.A. 10121"
+    ],
+    answer: "R.A. 8371",
+    explanation: "This is the Indigenous Peoples Rights Act (IPRA)."
+  },
+  {
+    question: "Which is an example of a civil right?",
+    choices: [
+      "Right to vote",
+      "Right to own land",
+      "Right to free enterprise",
+      "Right to housing"
+    ],
+    answer: "Right to vote",
+    explanation: "Voting is a civil and political right granted to citizens."
+  },
+  {
+    question: "Which promotes sustainable peace through dialogue?",
+    choices: [
+      "Economic sanctions",
+      "Peacebuilding",
+      "Military drills",
+      "Trade embargo"
+    ],
+    answer: "Peacebuilding",
+    explanation: "Peacebuilding includes non-violent efforts to resolve conflict."
+  },
+  {
+    question: "Freedom from torture is an example of:",
+    choices: [
+      "Environmental right",
+      "Cultural right",
+      "Political freedom",
+      "Human right"
+    ],
+    answer: "Human right",
+    explanation: "Torture is a violation of basic human dignity."
+  },
+  {
+    question: "Which right allows you to criticize the government?",
+    choices: [
+      "Right to property",
+      "Right to due process",
+      "Freedom of expression",
+      "Freedom from discrimination"
+    ],
+    answer: "Freedom of expression",
+    explanation: "This right protects peaceful expression of opinions."
+  },
+  {
+    question: "Which form of violence involves physical harm to civilians?",
+    choices: [
+      "Structural violence",
+      "Armed conflict",
+      "Economic inequality",
+      "Cyberbullying"
+    ],
+    answer: "Armed conflict",
+    explanation: "Armed conflict often results in harm or displacement of civilians."
+  },
+  {
+    question: "What is 'structural violence'?",
+    choices: [
+      "Physical assault",
+      "War crimes",
+      "Injustice embedded in systems and institutions",
+      "Verbal abuse"
+    ],
+    answer: "Injustice embedded in systems and institutions",
+    explanation: "Structural violence refers to social systems that disadvantage groups."
+  },
+
+  // 31–40: Environmental Management and Protection
+  {
+    question: "What law governs solid waste management in the Philippines?",
+    choices: [
+      "R.A. 9003",
+      "R.A. 8749",
+      "R.A. 9275",
+      "R.A. 7160"
+    ],
+    answer: "R.A. 9003",
+    explanation: "R.A. 9003 is the Ecological Solid Waste Management Act."
+  },
+  {
+    question: "What agency implements the Clean Air Act?",
+    choices: [
+      "DENR",
+      "DPWH",
+      "DOST",
+      "DSWD"
+    ],
+    answer: "DENR",
+    explanation: "The Department of Environment and Natural Resources (DENR) enforces environmental laws."
+  },
+  {
+    question: "Which of the following helps reduce plastic pollution?",
+    choices: [
+      "Incineration",
+      "Open dumping",
+      "Single-use packaging",
+      "Reusable containers"
+    ],
+    answer: "Reusable containers",
+    explanation: "Reusable products reduce waste and resource consumption."
+  },
+  {
+    question: "What is the main goal of environmental protection?",
+    choices: [
+      "Increase GDP",
+      "Promote tourism",
+      "Preserve biodiversity and ensure sustainability",
+      "Expand urban zones"
+    ],
+    answer: "Preserve biodiversity and ensure sustainability",
+    explanation: "Environmental management aims to protect ecosystems and future resources."
+  },
+  {
+    question: "Which gas contributes most to global warming?",
+    choices: [
+      "Carbon Dioxide",
+      "Oxygen",
+      "Hydrogen",
+      "Nitrogen"
+    ],
+    answer: "Carbon Dioxide",
+    explanation: "CO₂ is the major greenhouse gas from human activity."
+  },
+  {
+    question: "Which practice best supports environmental sustainability?",
+    choices: [
+      "Logging",
+      "Mining",
+      "Reforestation",
+      "Open-pit dumping"
+    ],
+    answer: "Reforestation",
+    explanation: "Reforestation restores forest cover and prevents soil erosion."
+  },
+  {
+    question: "Which law focuses on clean water regulation?",
+    choices: [
+      "R.A. 9275",
+      "R.A. 8749",
+      "R.A. 9003",
+      "R.A. 6713"
+    ],
+    answer: "R.A. 9275",
+    explanation: "R.A. 9275 is the Philippine Clean Water Act."
+  },
+  {
+    question: "Which disaster preparedness law was passed in 2010?",
+    choices: [
+      "R.A. 10121",
+      "R.A. 9003",
+      "R.A. 9165",
+      "R.A. 7586"
+    ],
+    answer: "R.A. 10121",
+    explanation: "This law strengthens disaster risk reduction and management."
+  },
+  {
+    question: "Which of the following is a renewable resource?",
+    choices: [
+      "Coal",
+      "Oil",
+      "Natural Gas",
+      "Solar Energy"
+    ],
+    answer: "Solar Energy",
+    explanation: "Solar energy is infinite and environmentally friendly."
+  },
+  {
+    question: "Which group promotes sustainable development in the Philippines?",
+    choices: [
+      "DENR",
+      "BIR",
+      "DFA",
+      "CHED"
+    ],
+    answer: "DENR",
+    explanation: "DENR implements policies for environmental sustainability and natural resource management."
+  },
+      ],
+  
+      clerical: [
+{
+  question: "Which is alphabetically correct?",
+  choices: [
+    "Appearance, Employment, Good Moral, Indigency",
+    "Employment, Appearance, Indigency, Good Moral",
+    "Indigency, Appearance, Employment, Good Moral",
+    "Good Moral, Indigency, Appearance, Employment"
+  ],
+  answer: "Appearance, Employment, Good Moral, Indigency",
+  explanation: "Alphabetical order: A → E → G → I."
+},
+  {
+    question: "Which is the correct alphabetical order?",
+    choices: [
+      "Bureau of Customs, Bangko Sentral, Bureau of Internal Revenue, Bureau of Fire Protection",
+      "Bangko Sentral, Bureau of Fire Protection, Bureau of Internal Revenue, Bureau of Customs",
+      "Bangko Sentral, Bureau of Customs, Bureau of Fire Protection, Bureau of Internal Revenue",
+      "Bangko Sentral, Bureau of Customs, Bureau of Internal Revenue, Bureau of Fire Protection"
+    ],
+    answer: "Bangko Sentral, Bureau of Customs, Bureau of Fire Protection, Bureau of Internal Revenue",
+    explanation: "Alphabetizing starts with 'B' → 'Ba', 'Bu'...; check each following letter."
+  },
+  {
+    question: "Arrange the following in correct alphabetical order:",
+    choices: [
+      "DICT, DTI, DOLE, DOST",
+      "DICT, DOLE, DOST, DTI",
+      "DOLE, DICT, DOST, DTI",
+      "DOST, DICT, DOLE, DTI"
+    ],
+    answer: "DICT, DOLE, DOST, DTI",
+    explanation: "Compare character by character: C before L, O, S, T."
+  },
+  {
+    question: "What comes first alphabetically?",
+    choices: [
+      "Saint Mary's College",
+      "Saint Louis University",
+      "St. Joseph Institute",
+      "San Beda College"
+    ],
+    answer: "Saint Louis University",
+    explanation: "'Saint' spelled out comes before 'San' and 'St.' in alphabetical order."
+  },
+  {
+    question: "Which order is alphabetically correct?",
+    choices: [
+      "Quezon Avenue, Quezon City, Quezon Province, Quirino Avenue",
+      "Quezon Avenue, Quezon Province, Quezon City, Quirino Avenue",
+      "Quezon City, Quezon Avenue, Quezon Province, Quirino Avenue",
+      "Quezon Avenue, Quezon City, Quirino Avenue, Quezon Province"
+    ],
+    answer: "Quezon Avenue, Quezon City, Quezon Province, Quirino Avenue",
+    explanation: "Consider full character sequence: Avenue < City < Province < Quirino."
+  },
+  {
+    question: "Which comes first in correct alphabetizing?",
+    choices: [
+      "Barangay Bagumbayan, Barangay Baclaran, Barangay Balintawak, Barangay Bagong Silang",
+      "Barangay Baclaran, Barangay Bagong Silang, Barangay Bagumbayan, Barangay Balintawak",
+      "Barangay Bagong Silang, Barangay Bagumbayan, Barangay Baclaran, Barangay Balintawak",
+      "Barangay Baclaran, Barangay Bagumbayan, Barangay Balintawak, Barangay Bagong Silang"
+    ],
+    answer: "Barangay Baclaran, Barangay Bagong Silang, Barangay Bagumbayan, Barangay Balintawak",
+    explanation: "First 8 letters determine the sequence — start by comparing ‘Bac’ < ‘Bag’."
+  },
+  {
+    question: "Which order is alphabetically correct?",
+    choices: [
+      "Dr. Jose P. Rizal, Gen. Emilio Aguinaldo, Andres Bonifacio, Pres. Manuel Quezon",
+      "Andres Bonifacio, Dr. Jose P. Rizal, Gen. Emilio Aguinaldo, Pres. Manuel Quezon",
+      "Andres Bonifacio, Gen. Emilio Aguinaldo, Dr. Jose P. Rizal, Pres. Manuel Quezon",
+      "Gen. Emilio Aguinaldo, Andres Bonifacio, Dr. Jose P. Rizal, Pres. Manuel Quezon"
+    ],
+    answer: "Andres Bonifacio, Dr. Jose P. Rizal, Gen. Emilio Aguinaldo, Pres. Manuel Quezon",
+    explanation: "Ignore titles when alphabetizing names unless otherwise stated."
+  },
+  {
+    question: "Arrange correctly:",
+    choices: [
+      "R.A. 6713, R.A. 9165, R.A. 9003, R.A. 10121",
+      "R.A. 10121, R.A. 6713, R.A. 9003, R.A. 9165",
+      "R.A. 10121, R.A. 9003, R.A. 9165, R.A. 6713",
+      "R.A. 6713, R.A. 9003, R.A. 9165, R.A. 10121"
+    ],
+    answer: "R.A. 10121, R.A. 6713, R.A. 9003, R.A. 9165",
+    explanation: "Compare numerical values directly after 'R.A.'."
+  },
+  {
+    question: "Which comes first alphabetically?",
+    choices: ["Barangay Batasan Hills", "Barangay Bagbag", "Barangay Balingasa", "Barangay Bahay Toro"],
+    answer: "Barangay Bagbag",
+    explanation: "'Bag' < 'Bah' < 'Bal' < 'Bat' → Bagbag comes first."
+  },
+  {
+    question: "What is the correct sequence?",
+    choices: ["April, August, February, January", "January, February, April, August", "February, January, August, April", "August, April, January, February"],
+    answer: "April, August, February, January",
+    explanation: "Alphabetical order disregards calendar order: A–F–J."
+  },
+  {
+    question: "Choose the alphabetical order:",
+    choices: [
+      "PhilHealth, PNP, PAGASA, PhilPost",
+      "PAGASA, PhilHealth, PhilPost, PNP",
+      "PhilPost, PhilHealth, PNP, PAGASA",
+      "PNP, PAGASA, PhilHealth, PhilPost"
+    ],
+    answer: "PAGASA, PhilHealth, PhilPost, PNP",
+    explanation: "Order by P-A, then P-H, P-P, P-N."
+  },
+  {
+    question: "Arrange alphabetically: PSA, PSAU, PSBank, PSC",
+    choices: [
+      "PSA, PSC, PSAU, PSBank",
+      "PSA, PSAU, PSBank, PSC",
+      "PSA, PSBank, PSAU, PSC",
+      "PSA, PSBank, PSC, PSAU"
+    ],
+    answer: "PSA, PSBank, PSC, PSAU",
+    explanation: "Break down by characters: PS-A, PS-B, PS-C, PS-AU."
+  },
+  {
+    question: "Choose the correct order:",
+    choices: [
+      "Accounting Office, Accounts Department, Accountable Forms Division, Accession Team",
+      "Accession Team, Accountable Forms Division, Accounting Office, Accounts Department",
+      "Accounts Department, Accounting Office, Accession Team, Accountable Forms Division",
+      "Accountable Forms Division, Accounts Department, Accession Team, Accounting Office"
+    ],
+    answer: "Accession Team, Accountable Forms Division, Accounting Office, Accounts Department",
+    explanation: "Accession → Accountable → Accounting → Accounts"
+  },
+  {
+    question: "Which comes first?",
+    choices: ["Barangay 1", "Barangay 10", "Barangay 2", "Barangay 21"],
+    answer: "Barangay 1",
+    explanation: "Numbers are sorted digit by digit: 1 < 2 < 10 < 21."
+  },
+  {
+    question: "What is the correct sequence?",
+    choices: ["NBI","NEDA"," NASA","NAIA"],
+    answer: "NAIA, NASA, NBI, NEDA",
+    explanation: "Sort by letter: A → B → E."
+  },
+  {
+    question: "Correct order?",
+    choices: [
+      "Region I, Region IV-A, Region III, Region V",
+      "Region III, Region I, Region IV-A, Region V",
+      "Region I, Region III, Region IV-A, Region V",
+      "Region IV-A, Region III, Region I, Region V"
+    ],
+    answer: "Region I, Region III, Region IV-A, Region V",
+    explanation: "Alphabetically 'I' < 'III' < 'IV' < 'V'"
+  },
+  {
+    question: "Which list is alphabetized correctly?",
+    choices: [
+      "Zamboanga, Albay, Capiz, Bukidnon",
+      "Albay, Bukidnon, Capiz, Zamboanga",
+      "Capiz, Bukidnon, Albay, Zamboanga",
+      "Bukidnon, Albay, Zamboanga, Capiz"
+    ],
+    answer: "Albay, Bukidnon, Capiz, Zamboanga",
+    explanation: "A → B → C → Z"
+  },
+  {
+    question: "Choose correct order:",
+    choices: ["St. Peter, Saint Mark, Sta. Ana, Santa Maria"],
+    answer: "Saint Mark, Santa Maria, Sta. Ana, St. Peter",
+    explanation: "Spelled-out 'Saint' goes before abbreviated 'Sta.' and 'St.'"
+  },
+  {
+    question: "Which is correct?",
+    choices: ["ABa, ABb, Aba, abb", "Aba, ABa, ABb, abb", "ABa, Aba, ABb, abb", "ABb, ABa, Aba, abb"],
+    answer: "Aba, ABa, ABb, abb",
+    explanation: "Lowercase letters come after uppercase; sort by ASCII."
+  },
+  {
+    question: "Alphabetize correctly:",
+    choices: ["No. 10 Street"," No. 2 Street", "No. 1 Street","No. 21 Street"],
+    answer: "No. 1 Street, No. 2 Street, No. 10 Street, No. 21 Street",
+    explanation: "Sort numerical digits left to right."
+  },
+  {
+    question: "Arrange the days alphabetically:",
+    choices: ["Wednesday", "Monday", "Sunday", "Friday"],
+    answer: "Friday, Monday, Sunday, Wednesday",
+    explanation: "Alphabetical: F → M → S → W"
+  },
+  {
+    question: "Which is in proper order?",
+    choices: ["Department of Budget", "Department of Agriculture", "Department of Finance"," Department of Health"],
+    answer: "Department of Agriculture, Department of Budget, Department of Finance, Department of Health",
+    explanation: "Sort based on second word after 'Department of...'"
+  },
+  {
+    question: "What comes first?",
+    choices: ["ZIP Code 1000", "ZIP Code 1001", "ZIP Code 999", "ZIP Code 1100"],
+    answer: "ZIP Code 999",
+    explanation: "Numerical comparison: 999 < 1000 < 1001 < 1100"
+  },
+  {
+    question: "Which comes first alphabetically?",
+    choices: ["Annex B", "Annex A", "Annex C", "Annex D"],
+    answer: "Annex A",
+    explanation: "Sort by letter following 'Annex'."
+  },
+  {
+    question: "Which is correct?",
+    choices: ["Barangay 12A", "Barangay 12", "Barangay 11", "Barangay 13"],
+    answer: "Barangay 11",
+    explanation: "Numeric order first: 11 < 12 < 12A < 13"
+  }
+      ],
+      grammar: [
+  {
+    question: "Identify the grammatical error: \"The team have won the championship.\"",
+    choices: ["The", "team", "have", "won"],
+    answer: "have",
+    explanation: "Collective nouns like 'team' take singular verbs: 'has won'."
+  },
+  {
+    question: "Find the error: \"Each of the boys are given a medal.\"",
+    choices: ["Each", "of the boys", "are", "given"],
+    answer: "are",
+    explanation: "Use singular verb with 'Each': should be 'is given'."
+  },
+  {
+    question: "Locate the error: \"She enjoys to swim in the ocean.\"",
+    choices: ["She", "enjoys", "to swim", "in the ocean"],
+    answer: "to swim",
+    explanation: "'Enjoys' is followed by a gerund: 'swimming'."
+  },
+  {
+    question: "Where is the error: \"They doesn't know the answer.\"",
+    choices: ["They", "doesn't", "know", "the answer"],
+    answer: "doesn't",
+    explanation: "'They' needs plural verb: 'don't know'."
+  },
+  {
+    question: "Identify the error: \"Neither John nor his friends is going to the party.\"",
+    choices: ["Neither", "his friends", "is", "going"],
+    answer: "is",
+    explanation: "Use plural verb when subject nearer is plural: 'are going'."
+  },
+  {
+    question: "Find the error: \"There is five pencils on the desk.\"",
+    choices: ["There", "is", "five pencils", "on the desk"],
+    answer: "is",
+    explanation: "Plural subject 'pencils' needs 'are': 'There are five pencils...'"
+  },
+  {
+    question: "Spot the error: \"He said he will arrived on time.\"",
+    choices: ["He", "will", "arrived", "on time"],
+    answer: "arrived",
+    explanation: "Future tense uses base verb: 'will arrive'."
+  },
+  {
+    question: "Identify the error: \"The books is on the table.\"",
+    choices: ["The", "books", "is", "on the table"],
+    answer: "is",
+    explanation: "Plural subject needs plural verb: 'are on the table'."
+  },
+  {
+    question: "Where is the mistake: \"She run every morning before school.\"",
+    choices: ["She", "run", "every morning", "before school"],
+    answer: "run",
+    explanation: "Present tense third person requires 'runs'."
+  },
+  {
+    question: "Find the error: \"My sister who live in Cebu is a nurse.\"",
+    choices: ["My sister", "who", "live", "in Cebu"],
+    answer: "live",
+    explanation: "'Who' refers to singular: 'lives in Cebu'."
+  },
+  {
+    question: "Locate the error: \"The informations are confidential.\"",
+    choices: ["The", "informations", "are", "confidential"],
+    answer: "informations",
+    explanation: "'Information' is uncountable, no plural form."
+  },
+  {
+    question: "Spot the error: \"Either the teachers or the principal are to blame.\"",
+    choices: ["Either", "teachers", "principal", "are"],
+    answer: "are",
+    explanation: "Subject nearer the verb is singular: 'is to blame'."
+  },
+  {
+    question: "Where is the error: \"He has went to the market already.\"",
+    choices: ["He", "has", "went", "to the market"],
+    answer: "went",
+    explanation: "Past participle of 'go' is 'gone': 'has gone'."
+  },
+  {
+    question: "Find the error: \"She was very hungry, so she ate the whole sandwich quick.\"",
+    choices: ["was", "very hungry", "whole sandwich", "quick"],
+    answer: "quick",
+    explanation: "Use adverb form: 'quickly'."
+  },
+  {
+    question: "Identify the error: \"Neither of the answers are correct.\"",
+    choices: ["Neither", "answers", "are", "correct"],
+    answer: "are",
+    explanation: "Singular verb needed after 'neither': 'is correct'."
+  },
+  {
+    question: "Spot the error: \"She said she will leave after lunch.\"",
+    choices: ["said", "will", "leave", "after lunch"],
+    answer: "will",
+    explanation: "Past reporting verb needs 'would leave'."
+  },
+  {
+    question: "Locate the mistake: \"The baby cry every morning.\"",
+    choices: ["The", "baby", "cry", "every morning"],
+    answer: "cry",
+    explanation: "Use singular verb: 'cries'."
+  },
+  {
+    question: "Find the error: \"My brother don’t like broccoli.\"",
+    choices: ["My brother", "don’t", "like", "broccoli"],
+    answer: "don’t",
+    explanation: "Use 'doesn’t' for singular subject."
+  },
+  {
+    question: "Identify the incorrect word: \"The cat chased it's tail for hours.\"",
+    choices: ["The", "chased", "it's", "tail"],
+    answer: "it's",
+    explanation: "'It's' means 'it is'; should be 'its' (possessive)."
+  },
+  {
+    question: "Where is the error: \"The children enjoys playing outside.\"",
+    choices: ["children", "enjoys", "playing", "outside"],
+    answer: "enjoys",
+    explanation: "Plural subject takes 'enjoy'."
+  },
+  {
+    question: "Find the error: \"He do his homework regularly.\"",
+    choices: ["He", "do", "his", "homework"],
+    answer: "do",
+    explanation: "Third person singular takes 'does'."
+  },
+  {
+    question: "Spot the mistake: \"None of the cookies was eaten.\"",
+    choices: ["None", "cookies", "was", "eaten"],
+    answer: "was",
+    explanation: "'None' with plural noun often takes 'were'."
+  },
+  {
+    question: "Identify the error: \"She studies hardly to pass the exam.\"",
+    choices: ["She", "studies", "hardly", "exam"],
+    answer: "hardly",
+    explanation: "Use 'hard' (effort), not 'hardly' (barely)."
+  },
+  {
+    question: "Where’s the incorrect part: \"Many people prefers to stay home during holidays.\"",
+    choices: ["Many", "people", "prefers", "holidays"],
+    answer: "prefers",
+    explanation: "Plural subject: 'prefer'."
+  },
+  {
+    question: "Locate the error: \"The movie that I watched last night were amazing.\"",
+    choices: ["movie", "that", "watched", "were"],
+    answer: "were",
+    explanation: "'Movie' is singular, use 'was amazing'."
+  }
+      ]
+    };
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const content = document.getElementById("content");
+      sidebar.classList.toggle("show");
+      content.classList.toggle("shifted");
+    }
+
+    function startQuiz(topic) {
+  const quiz = quizzes[topic];
+  const container = document.getElementById("quizSection");
+  container.innerHTML = `<h2 id="quizTitle">${getTopicTitle(topic)}</h2>`;
+  document.getElementById("sidebar").classList.remove("show");
+document.getElementById("content").classList.remove("shifted");
+
+  quiz.forEach((q, index) => {
+    const block = document.createElement("div");
+    block.className = "question-block";
+
+    // Create question and choices
+    let html = `<p>(${index + 1}) ${q.question}</p>`;
+    q.choices.forEach((choice, i) => {
+      const isDisabled = q.answered ? "disabled" : "";
+      html += `<button class="choice" ${isDisabled} onclick="checkAnswer('${topic}', ${index}, '${choice}', this)">
+        ${String.fromCharCode(65 + i)}. ${choice}</button>`;
+    });
+
+    html += `<div class='result' id='result${topic}${index}'>`;
+    if (q.answered) {
+      html += q.selected === q.answer ? "✅ Correct!" : `❌ Incorrect. Correct Answer: ${q.answer}`;
+    }
+    html += `</div>`;
+
+    html += `<div class='explanation' id='explanation${topic}${index}'>`;
+    if (q.answered) html += q.explanation;
+    html += `</div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  });
+
+  // Add "Next" button (show only if all answered)
+  const nextBtn = document.createElement("button");
+  nextBtn.id = "nextBtn";
+  nextBtn.className = "next-btn";
+  nextBtn.innerText = getNextLabel(topic);
+  nextBtn.style.display = quiz.every(q => q.answered) ? "inline-block" : "none";
+  nextBtn.onclick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => startQuiz(getNextTopic(topic)), 400);
+  };
+  container.appendChild(nextBtn);
+
+  updateTotalScore();
+}
+function getTopicTitle(topic) {
+  if (topic === 'geninfo') return "General Information";
+  if (topic === 'clerical') return "Clerical Operation";
+  if (topic === 'grammar') return "Identifying Errors";
+  return "Quiz";
+}
+
+function getNextLabel(topic) {
+  if (topic === 'geninfo') return "Next: Clerical Operation →";
+  if (topic === 'clerical') return "Next: Identifying Errors →";
+  return "✅ Done!";
+}
+
+function getNextTopic(topic) {
+  if (topic === 'geninfo') return "clerical";
+  if (topic === 'clerical') return "grammar";
+  return "geninfo";
+}
+
+function checkAnswer(topic, index, selected, btn) {
+  const quiz = quizzes[topic];
+  const q = quiz[index];
+  const resultEl = document.getElementById(`result${topic}${index}`);
+  const explainEl = document.getElementById(`explanation${topic}${index}`);
+  const buttons = btn.parentElement.querySelectorAll("button");
+
+  // Prevent re-answering
+  if (q.answered) return;
+
+  buttons.forEach(b => b.disabled = true);
+  q.answered = true;
+  q.selected = selected;
+
+  if (selected === q.answer) {
+    resultEl.innerText = "✅ Correct!";
+    resultEl.style.color = "green";
+    q.score = 1;
+  } else {
+    resultEl.innerText = `❌ Incorrect. Correct Answer: ${q.answer}`;
+    resultEl.style.color = "red";
+    q.score = 0;
+  }
+
+  explainEl.innerText = q.explanation;
+
+  updateTotalScore();
+
+  // Show Next button if all questions are answered
+  if (quiz.every(q => q.answered)) {
+    const nextBtn = document.getElementById("nextBtn");
+    if (nextBtn) nextBtn.style.display = "inline-block";
+  }
+}
+
+    function updateTotalScore() {
+      let total = 0, max = 0;
+      Object.values(quizzes).forEach(list => {
+        list.forEach(q => {
+          if (q.score !== undefined) {
+            total += q.score;
+          }
+          max++;
+        });
+      });
+      document.getElementById("scoreRecord").innerText = `Total Score: ${total} / ${max}`;
+    }
+  </script>
+</body>
+<script>
+  function hideLanding() {
+    const landing = document.getElementById("landingPage");
+    landing.style.opacity = "1";
+    landing.style.transition = "opacity 0.6s ease";
+    landing.style.opacity = "0";
+
+    setTimeout(() => {
+      landing.style.display = "none";
+      startQuiz('geninfo'); // Automatically load General Information quiz
+    }, 600);
+  }
+</script>
+
+</html>
